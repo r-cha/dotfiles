@@ -1,0 +1,6 @@
+[user]
+	email = robert@entos.ai
+	name = Robert Chandler
+[core]
+	editor = code
+	excludesFile = ~/.gitignore
