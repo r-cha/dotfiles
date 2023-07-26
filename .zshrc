@@ -31,7 +31,7 @@ unsetopt inc_append_history
 unsetopt share_history
 
 # User configuration
-export EDITOR='code'
+export EDITOR='nvim'
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
