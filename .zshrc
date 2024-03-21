@@ -3,29 +3,28 @@ export ZSH_DISABLE_COMPFIX="true"
 # Path to your oh-my-zsh installation.
 export ZSH="~/.zsh"
 
-ZSH_THEME="robbyrussell"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-COMPLETION_WAITING_DOTS="true"
-
-plugins=(git)
-
-source $ZSH/oh-my-zsh.sh
-
 unsetopt inc_append_history
 unsetopt share_history
 
-export EDITOR='nvim'
+# Ignore duplicates from history
+setopt HIST_IGNORE_ALL_DUPS
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+# User configuration
+export EDITOR='nvim'
 
 alias ll='ls -al'
 alias line='printf '─%.s' {1..$(tput cols)}'
 alias gbdmd="git branch | grep -v "main" | grep -v "develop" | xargs git branch -D"
+
+# opam configuration
+[[ ! -r /Users/r-cha/.opam/opam-init/init.zsh ]] || source /Users/r-cha/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
+
+# Created by `pipx` on 2023-12-15 22:23:48
+export PATH="$PATH:/Users/r-cha/.local/bin"
+export CLICOLOR=1
+
+autoload -Uz vcs_info
+precmd() { vcs_info }
+zstyle ':vcs_info:git:*' formats '%b '
+setopt PROMPT_SUBST
+PROMPT='%F{blue}%~%f %F{red}${vcs_info_msg_0_}%f$ '
