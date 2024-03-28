@@ -14,7 +14,12 @@ export EDITOR='nvim'
 
 alias ll='ls -al'
 alias line='printf '─%.s' {1..$(tput cols)}'
-alias gbdmd="git branch | grep -v "main" | grep -v "develop" | xargs git branch -D"
+gcap() {
+  # git commit all push
+  git add --all
+  git commit -m "$1"
+  git push
+}
 
 # opam configuration
 [[ ! -r /Users/r-cha/.opam/opam-init/init.zsh ]] || source /Users/r-cha/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
