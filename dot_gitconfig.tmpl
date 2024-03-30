@@ -1,6 +1,12 @@
 [user]
-	email = robert@akchandler.com
 	name = Robert Chandler
+	{{- if eq .chezmoi.username "robert.chandler" }}
+	email = robert.chandler@elationhealth.com
+	{{- else }}
+	email = robert@akchandler.com
+	{{- end }}
+[init]
+	defaultBranch = main
 [core]
 	editor = nvim
 	excludesFile = ~/.gitignore
