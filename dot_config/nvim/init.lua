@@ -5,7 +5,16 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 vim.opt.title = true
-local cwd = vim.fn.fnamemodify(vim.loop.cwd(), ':t')
+local cwd
+-- Assume there might be a single argument with the directory to open
+local arg_dir = vim.fn.argv(0)
+-- Use the provided directory for the title
+if arg_dir and vim.fn.isdirectory(arg_dir) == 1 then
+  cwd = vim.fn.fnamemodify(arg_dir, ':t')
+else
+  -- Otherwise, fallback to the base directory name
+  cwd = vim.fn.fnamemodify(vim.loop.cwd(), ':t')
+end
 vim.o.titlestring = cwd .. ' [nvim]'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
