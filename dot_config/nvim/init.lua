@@ -4,6 +4,10 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+vim.opt.title = true
+local cwd = vim.fn.fnamemodify(vim.loop.cwd(), ':t')
+vim.o.titlestring = cwd .. ' [nvim]'
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
