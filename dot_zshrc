@@ -1,19 +1,26 @@
 export ZSH_DISABLE_COMPFIX="true"
 
-# Path to your oh-my-zsh installation.
 export ZSH="~/.zsh"
 
-unsetopt inc_append_history
-unsetopt share_history
-
-# Ignore duplicates from history
-setopt HIST_IGNORE_ALL_DUPS
+# History
+HISTSIZE=5000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
 
 # User configuration
 export EDITOR='nvim'
 
 alias ll='ls -al'
 alias line='printf '─%.s' {1..$(tput cols)}'
+alias c='clear'
 gcap() {
   # git commit all push
   git add --all
@@ -32,4 +39,4 @@ autoload -Uz vcs_info
 precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats '%b '
 setopt PROMPT_SUBST
-PROMPT='%F{blue}%~%f %F{red}${vcs_info_msg_0_}%f$ '
+PROMPT='%F{blue}%~%f %F{red}${vcs_info_msg_0_}%f> '
