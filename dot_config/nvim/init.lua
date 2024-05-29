@@ -516,7 +516,7 @@ end, 0)
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_, bufnr)
+local on_attach = function(client, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
   -- to define small helper and utility functions so you don't have to repeat yourself
   -- many times.
@@ -529,6 +529,11 @@ local on_attach = function(_, bufnr)
     end
 
     vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+  end
+
+  if client.name == 'ruff' then
+    -- Disable hover in favor of Pyright
+    client.server_capabilities.hoverProvider = false
   end
 
   nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
@@ -593,7 +598,15 @@ require("mason-lspconfig").setup()
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  -- pyright = {},
+  pyright = {
+    pyright = { disableOrganizeImports = true },
+    python = {
+      analysis = {
+        -- Ignore all files for analysis to exclusively use Ruff for linting
+        ignore = { '*' },
+      },
+    },
+  },
   -- rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
