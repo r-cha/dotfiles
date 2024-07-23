@@ -209,7 +209,6 @@ require("lazy").setup({
               show_colors=true
             },
           'encoding',
-          'fileformat',
           'filetype'
         },
         lualine_y = { 'progress' },
