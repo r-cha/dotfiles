@@ -251,6 +251,11 @@ require("lazy").setup({
   },
 
   {
+    "nvim-telescope/telescope-file-browser.nvim",
+    dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+  },
+
+  {
     -- Highlight, edit, and navigate code
     "nvim-treesitter/nvim-treesitter",
     dependencies = {
@@ -349,6 +354,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
+local fb_actions = require "telescope._extensions.file_browser.actions"
 require("telescope").setup({
   defaults = {
     mappings = {
@@ -358,10 +364,16 @@ require("telescope").setup({
       },
     },
   },
+  extensions = {
+    file_browser = {
+      hijack_netrw = true,
+    }
+  }
 })
 
 -- Enable telescope fzf native, if installed
 pcall(require("telescope").load_extension, "fzf")
+pcall(require("telescope").load_extension, "file_browser")
 
 -- Telescope live_grep in git root
 -- Function to find the git root directory based on the current buffer's path
@@ -416,6 +428,9 @@ local function telescope_live_grep_open_files()
     prompt_title = "Live Grep in Open Files",
   })
 end
+local function telescope_file_browser_here()
+  require("telescope").extensions.file_browser.file_browser({ cwd = vim.fn.expand("%:p:h"), select_buffer=true })
+end
 vim.keymap.set("n", "<leader>s/", telescope_live_grep_open_files, { desc = "[S]earch [/] in Open Files" })
 vim.keymap.set("n", "<leader>ss", require("telescope.builtin").builtin, { desc = "[S]earch [S]elect Telescope" })
 vim.keymap.set("n", "<leader>gf", require("telescope.builtin").git_files, { desc = "Search [G]it [F]iles" })
@@ -426,6 +441,7 @@ vim.keymap.set("n", "<leader>sg", require("telescope.builtin").live_grep, { desc
 vim.keymap.set("n", "<leader>sG", ":LiveGrepGitRoot<cr>", { desc = "[S]earch by [G]rep on Git Root" })
 vim.keymap.set("n", "<leader>sd", require("telescope.builtin").diagnostics, { desc = "[S]earch [D]iagnostics" })
 vim.keymap.set("n", "<leader>sr", require("telescope.builtin").resume, { desc = "[S]earch [R]esume" })
+vim.keymap.set("n", "<leader>bb", telescope_file_browser_here, { desc = "File [B]rowser" })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
