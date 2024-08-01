@@ -9,7 +9,7 @@ local cwd
 -- Assume there might be a single argument with the directory to open
 local arg_dir = vim.fn.argv(0)
 -- Use the provided directory for the title
-if arg_dir and vim.fn.isdirectory(arg_dir) == 1 then
+if arg_dir and vim.fn.isdirectory(arg_dir) == 1 and arg_dir ~= '.' then
   cwd = vim.fn.fnamemodify(arg_dir, ':t')
 else
   -- Otherwise, fallback to the base directory name
