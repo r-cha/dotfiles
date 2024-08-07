@@ -264,6 +264,11 @@ require("lazy").setup({
     build = ":TSUpdate",
   },
 
+  {
+    "r-cha/encourage.nvim",
+    config = true,
+  },
+
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
@@ -354,7 +359,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
-local fb_actions = require "telescope._extensions.file_browser.actions"
 require("telescope").setup({
   defaults = {
     mappings = {
@@ -632,6 +636,9 @@ local servers = {
       telemetry = { enable = false },
       -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
       -- diagnostics = { disable = { 'missing-fields' } },
+      diagnostics = {
+        globals = { 'vim' }
+      },
     },
   },
 }
@@ -708,6 +715,8 @@ cmp.setup({
     { name = "path" },
   },
 })
+
+require('encourage').setup()
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
