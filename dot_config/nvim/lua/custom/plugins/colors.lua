@@ -7,6 +7,7 @@ return {
             mirage = false,
             overrides = {
                 LineNr = { fg = colors.fg },
+                SpecialKey = { fg = colors.special },
                 Normal = { bg = "None" },
                 ColorColumn = { bg = "None" },
                 SignColumn = { bg = "None" },
