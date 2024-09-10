@@ -178,7 +178,7 @@ require("lazy").setup({
     opts = {
       options = {
         icons_enabled = true,
-        theme = "ayu_mirage",
+        theme = "ayu",
         component_separators = "|",
         section_separators = "",
       },
