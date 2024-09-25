@@ -28,9 +28,6 @@ gcap() {
   git push
 }
 
-# opam configuration
-[[ ! -r /Users/r-cha/.opam/opam-init/init.zsh ]] || source /Users/r-cha/.opam/opam-init/init.zsh  > /dev/null 2> /dev/null
-
 # Created by `pipx` on 2023-12-15 22:23:48
 export PATH="$PATH:/Users/r-cha/.local/bin"
 export CLICOLOR=1
