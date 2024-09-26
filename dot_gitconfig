@@ -1,10 +1,6 @@
 [user]
 	name = Robert Chandler
-	{{- if eq .chezmoi.username "robert.chandler" }}
-	email = robert.chandler@elationhealth.com
-	{{- else }}
 	email = robert@akchandler.com
-	{{- end }}
 [init]
 	defaultBranch = main
 [core]
@@ -15,5 +11,15 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[commit]
+	verbose = true
+[diff]
+	algorithm = histogram
 [push]
 	autoSetupRemote = true
+[branch]
+	sort = committerdate
+[merge]
+	conflictstyle = zdiff3
+[includeIf "gitdir:~/Elation/"]
+	path = ~/Elation/.gitconfig
