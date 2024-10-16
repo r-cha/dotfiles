@@ -6,7 +6,7 @@ return {
         require('ayu').setup({
             mirage = false,
             overrides = {
-                LineNr = { fg = colors.fg },
+                LineNr = { fg = colors.comment },
                 SpecialKey = { fg = colors.special },
                 Normal = { bg = "None" },
                 ColorColumn = { bg = "None" },

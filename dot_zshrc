@@ -3,7 +3,7 @@ export ZSH_DISABLE_COMPFIX="true"
 export ZSH="~/.zsh"
 
 # History
-HISTSIZE=5000
+HISTSIZE=50000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
