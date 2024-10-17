@@ -15,6 +15,10 @@ setopt hist_save_no_dups    # Dont write duplicate entries in the history file.
 setopt hist_ignore_dups     # Dont record an entry that was just recorded again.
 setopt hist_find_no_dups    # Do not display a line previously found.
 
+# Case-insensitive completion
+autoload -Uz compinit && compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+
 export EDITOR='nvim'
 
 # Random utils
@@ -28,7 +32,8 @@ mkcd() {
 alias b='git switch -c'
 alias s='git status'
 alias c='git commit'
-alias p='git push'
+alias p='git pull'
+alias gps='git push'
 gcap() {
   # git commit all push
   git add --all
