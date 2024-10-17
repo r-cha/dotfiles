@@ -3,30 +3,42 @@ export ZSH_DISABLE_COMPFIX="true"
 export ZSH="~/.zsh"
 
 # History
-HISTSIZE=10000
+HISTSIZE=50000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
-setopt appendhistory
-setopt sharehistory
-setopt hist_ignore_space
-setopt hist_ignore_all_dups
-setopt hist_save_no_dups
-setopt hist_ignore_dups
-setopt hist_find_no_dups
+setopt appendhistory        # Immediately append to history file.
+setopt sharehistory         # Share history between all sessions
+setopt hist_ignore_space    # Dont record an entry starting with a space.
+setopt hist_ignore_all_dups # Delete old recorded entry if new entry is a duplicate.
+setopt hist_save_no_dups    # Dont write duplicate entries in the history file.
+setopt hist_ignore_dups     # Dont record an entry that was just recorded again.
+setopt hist_find_no_dups    # Do not display a line previously found.
 
-# User configuration
 export EDITOR='nvim'
 
+# Random utils
 alias ll='ls -al'
 alias line='printf '─%.s' {1..$(tput cols)}'
-alias c='clear'
+mkcd() {
+  mkdir -p $1 && cd $1
+}
+
+# Git
+alias b='git switch -c'
+alias s='git status'
+alias c='git commit'
+alias p='git push'
 gcap() {
   # git commit all push
   git add --all
   git commit -m "$1"
   git push
 }
+alias cdr='cd $(git rev-parse --show-toplevel)' # cd to git Root
+
+# Notes
+alias n='vim +Notes' # Opens Vim and calls `:Notes`
 
 # Created by `pipx` on 2023-12-15 22:23:48
 export PATH="$PATH:/Users/r-cha/.local/bin"
@@ -40,4 +52,4 @@ precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats '%b '
 setopt PROMPT_SUBST
 NEWLINE=$'\n'
-PROMPT='%F{%(?.green.red)}┌%f%F{red}${vcs_info_msg_0_}%f%F{blue}%~%f%F{%(?.green.red)}${NEWLINE}└❯%f '
+PROMPT='%F{%(?.green.red)}┌%f%F{blue}%~%f%F{red} ${vcs_info_msg_0_}%f%F{%(?.green.red)}${NEWLINE}└❯%f '
