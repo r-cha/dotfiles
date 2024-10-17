@@ -3,7 +3,7 @@ export ZSH_DISABLE_COMPFIX="true"
 export ZSH="~/.zsh"
 
 # History
-HISTSIZE=50000
+HISTSIZE=10000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
@@ -32,8 +32,12 @@ gcap() {
 export PATH="$PATH:/Users/r-cha/.local/bin"
 export CLICOLOR=1
 
+# TODO: Transient prompt
+# SHORT_PROMPT='%F{%(?.green.red)}%~ ╶❯%f '
+
 autoload -Uz vcs_info
 precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats '%b '
 setopt PROMPT_SUBST
-PROMPT='%F{blue}%~%f%F{red} ${vcs_info_msg_0_}%f%F{green}❯%f '
+NEWLINE=$'\n'
+PROMPT='%F{%(?.green.red)}┌%f%F{red}${vcs_info_msg_0_}%f%F{blue}%~%f%F{%(?.green.red)}${NEWLINE}└❯%f '
