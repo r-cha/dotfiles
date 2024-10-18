@@ -166,6 +166,9 @@ require("lazy").setup({
   {
     "zbirenbaum/copilot.lua",
     opts = {
+      panel = {
+        enabled=false,
+      },
       suggestion = {
         auto_trigger=true,
         keymap = {
@@ -354,6 +357,10 @@ vim.o.termguicolors = true
 
 -- Keep some spare lines around for scrolling
 vim.opt.scrolloff = 8
+
+-- Display special whitespace characters
+vim.opt.list = true
+vim.opt.listchars = { tab = "▸ ", lead = "·", trail = "·", extends = "»", precedes = "«", nbsp = "␣" }
 
 -- [[ Basic Keymaps ]]
 
