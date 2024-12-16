@@ -1,1 +1,10 @@
 theme = ayu
+
+font-family = Iosevka Term
+font-size = 16
+
+cursor-style = underline
+background-opacity = 0.9
+background-blur-radius = 10
+window-title-font-family = Iosevka
+macos-window-shadow = false
