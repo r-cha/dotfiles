@@ -4,7 +4,7 @@ return {
         local colors = require('ayu.colors')
         colors.generate(true)
         require('ayu').setup({
-            mirage = false,
+            mirage = true,
             overrides = {
                 LineNr = { fg = colors.comment },
                 SpecialKey = { fg = colors.special },

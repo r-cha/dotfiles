@@ -186,7 +186,7 @@ require("lazy").setup({
     opts = {
       options = {
         icons_enabled = true,
-        theme = "ayu",
+        theme = "ayu-mirage",
         component_separators = "|",
         section_separators = "",
       },
@@ -361,6 +361,13 @@ vim.opt.scrolloff = 8
 -- Display special whitespace characters
 vim.opt.list = true
 vim.opt.listchars = { tab = "▸ ", lead = "·", trail = "·", extends = "»", precedes = "«", nbsp = "␣" }
+
+-- Configure smart folding
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldcolumn = "0"
+vim.opt.foldtext = ""
+vim.opt.foldlevel = 99
 
 -- [[ Basic Keymaps ]]
 
