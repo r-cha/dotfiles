@@ -1,8 +1,9 @@
-theme = Ayu Mirage
+# Ghostty Config
 
+## Aesthetics
+theme = Ayu Mirage
 font-family = Iosevka Term
 font-size = 16
-
 shell-integration-features = no-cursor
 mouse-hide-while-typing = true
 cursor-style = block
@@ -12,5 +13,13 @@ window-title-font-family = Iosevka
 window-padding-balance = true
 macos-window-shadow = false
 macos-titlebar-proxy-icon = hidden
+macos-icon = custom-style
+macos-icon-ghost-color = a6cc70
+macos-icon-screen-color = 1f2430
 
+## Behavior
+window-save-state = always
+quit-after-last-window-closed = true
+
+## Keybinds
 keybind = global:command+`=toggle_quick_terminal
