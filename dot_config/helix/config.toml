@@ -1,0 +1,19 @@
+theme = "ayu_mirage"
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.whitespace.render]
+tab = "all"
+space = "all"
+nbsp = "all"
+nnbsp = "all"
+
+[editor.whitespace.characters]
+tab = "▸"
+tabpad = " "
+space = "·"
+nbsp = "␣"
+nnbsp = "␣"
