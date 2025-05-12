@@ -1,7 +1,7 @@
 # Ghostty Config
 
 ## Aesthetics
-theme = ayu
+theme = light:ayu_light, dark:ayu
 font-family = Iosevka Term
 font-size = 16
 shell-integration-features = no-cursor
