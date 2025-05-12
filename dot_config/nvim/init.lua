@@ -656,7 +656,6 @@ require("lazy").setup({
 		version = "1.*",
 		dependencies = {
 			"folke/lazydev.nvim",
-			"giuxtaposition/blink-cmp-copilot",
 		},
 		--- @module 'blink.cmp'
 		--- @type blink.cmp.Config
@@ -688,15 +687,9 @@ require("lazy").setup({
 			},
 
 			sources = {
-				default = { "lsp", "path", "snippets", "lazydev", "copilot" },
+				default = { "lsp", "path", "snippets", "lazydev" },
 				providers = {
 					lazydev = { module = "lazydev.integrations.blink", score_offset = 100 },
-					copilot = {
-						name = "copilot",
-						module = "blink-cmp-copilot",
-						score_offset = 100,
-						async = true,
-					},
 				},
 			},
 
@@ -786,16 +779,10 @@ require("lazy").setup({
 		--    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 	},
 
-	-- Copilot stuff
 	{
-		"zbirenbaum/copilot.lua",
-		opts = {
-			panel = {
-				enabled = false,
-			},
-			suggestion = { enabled = false },
-		},
+		"nvim-treesitter/nvim-treesitter-context",
 	},
+
 	{
 		"yetone/avante.nvim",
 		event = "VeryLazy",
@@ -835,8 +822,6 @@ require("lazy").setup({
 		},
 	},
 
-	{ "AndreM222/copilot-lualine" },
-
 	{
 		-- Set lualine as statusline
 		"nvim-lualine/lualine.nvim",
@@ -863,23 +848,6 @@ require("lazy").setup({
 				},
 				lualine_c = { "filename" },
 				lualine_x = {
-					{
-						"copilot",
-						symbols = {
-							status = {
-								icons = vim.g.have_nerd_font
-										and {
-											enabled = "󰚩 ",
-											sleep = "󱚡 ", -- auto-trigger disabled
-											disabled = "󱚧 ",
-											warning = "󱚝 ",
-											unknown = "󱚟 ",
-										}
-									or { enabled = "🤖", disabled = "🚱", unknown = "❓" },
-							},
-						},
-						show_colors = true,
-					},
 					"filetype",
 				},
 				lualine_z = { "location" },
