@@ -44,9 +44,6 @@ gcap() {
 }
 alias cdr='cd $(git rev-parse --show-toplevel)' # cd to git Root
 
-# Notes
-alias n='nvim +Notes' # Opens Vim and calls `:Notes`
-
 # Created by `pipx` on 2023-12-15 22:23:48
 export PATH="$PATH:/Users/r-cha/.local/bin"
 export CLICOLOR=1
