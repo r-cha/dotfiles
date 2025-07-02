@@ -12,6 +12,7 @@ background-blur-radius = 7
 window-title-font-family = Iosevka
 window-padding-balance = true
 macos-window-shadow = false
+macos-titlebar-style = tabs
 macos-titlebar-proxy-icon = hidden
 macos-icon = custom-style
 macos-icon-ghost-color = a6cc70
