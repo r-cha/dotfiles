@@ -19,6 +19,17 @@ setopt hist_find_no_dups    # Do not display a line previously found.
 autoload -Uz compinit && compinit
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
+# Key bindings
+bindkey '^[[H' beginning-of-line   # Home
+bindkey '^[[F' end-of-line         # End
+bindkey '^[[1~' beginning-of-line  # Home (alternative)
+bindkey '^[[4~' end-of-line        # End (alternative)
+bindkey '^[[3~' delete-char        # Delete
+bindkey '^[[1;5C' forward-word     # Ctrl+Right
+bindkey '^[[1;5D' backward-word    # Ctrl+Left
+bindkey '^[[A' history-search-backward    # Up arrow - search history
+bindkey '^[[B' history-search-forward     # Down arrow - search history
+
 export EDITOR='nvim'
 
 # Random utils
@@ -43,9 +54,16 @@ gcap() {
   git push
 }
 alias cdr='cd $(git rev-parse --show-toplevel)' # cd to git Root
+alias cdcode='cd ~/code' # cd to project library
 
-# Created by `pipx` on 2023-12-15 22:23:48
-export PATH="$PATH:/Users/r-cha/.local/bin"
+# LLM shortcuts
+sonnet() {
+  llm -m claude-4-sonnet "$1"
+}
+opus() {
+  llm -m claude-4-opus "$1"
+}
+
 export CLICOLOR=1
 
 # TODO: Transient prompt
