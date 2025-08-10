@@ -794,7 +794,25 @@ require("lazy").setup({
 		opt = {},
 	},
 
+	-- Load custom plugins (like colorschemes) before plugins that depend on them
 	{ import = "custom.plugins" },
+
+	-- Plugins that depend on custom plugins must come after the import
+	-- auto-dark-mode needs flexoki colorscheme to be loaded first
+	{
+		"f-person/auto-dark-mode.nvim",
+		opts = {
+			update_interval = 1000,
+			set_dark_mode = function()
+				vim.api.nvim_set_option_value("background", "dark", {})
+				vim.cmd.colorscheme("flexoki")
+			end,
+			set_light_mode = function()
+				vim.api.nvim_set_option_value("background", "light", {})
+				vim.cmd.colorscheme("flexoki")
+			end,
+		},
+	},
 
 	-- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
 	-- Or use telescope!
