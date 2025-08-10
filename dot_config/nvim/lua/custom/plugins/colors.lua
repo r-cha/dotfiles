@@ -1,25 +1,15 @@
 return {
-    "shatur/neovim-ayu",
-    config = function()
-        local colors = require('ayu.colors')
-        colors.generate(true)
-        require('ayu').setup({
-            mirage = true,
-            overrides = {
-                LineNr = { fg = colors.comment },
-                SpecialKey = { fg = colors.special },
-                Normal = { bg = "None" },
-                ColorColumn = { bg = "None" },
-                SignColumn = { bg = "None" },
-                Folded = { bg = "None" },
-                FoldColumn = { bg = "None" },
-                CursorLine = { bg = "None" },
-                CursorColumn = { bg = "None" },
-                WhichKeyFloat = { bg = "None" },
-                VertSplit = { bg = "None" },
-            },
-        })
+	"kepano/flexoki-neovim",
+	name = "flexoki",
+	lazy = false,
+	priority = 1000,
+	config = function()
+		require("flexoki").setup({
+			variant = "auto",
+			dark_variant = "dark",
+			light_variant = "light",
+		})
 
-        vim.cmd.colorscheme 'ayu'
-    end,
+		vim.cmd.colorscheme("flexoki")
+	end,
 }

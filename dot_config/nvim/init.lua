@@ -748,33 +748,44 @@ require("lazy").setup({
 		-- Set lualine as statusline
 		"nvim-lualine/lualine.nvim",
 		-- See `:help lualine.txt`
-		opts = {
-			options = {
-				icons_enabled = vim.g.have_nerd_font,
-				theme = "ayu",
-				component_separators = "|",
-				section_separators = "",
-			},
-			sections = {
-				lualine_a = { "mode" },
-				lualine_b = {
-					"branch",
-					"diff",
-					{
-						"diagnostics",
-						sources = { "nvim_diagnostic" },
-						symbols = vim.g.have_nerd_font
-								and { error = " ", warn = " ", info = " ", hint = " " }
-							or { error = "❗", warn = "⚠️", info = "ℹ️", hint = "💡" },
+		config = function()
+			-- Function to get appropriate theme
+			local function get_theme()
+				if vim.o.background == "dark" then
+					return require("custom.lualine_theme")
+				else
+					return "auto"
+				end
+			end
+
+			require("lualine").setup({
+				options = {
+					icons_enabled = vim.g.have_nerd_font,
+					theme = get_theme(),
+					component_separators = "|",
+					section_separators = "",
+				},
+				sections = {
+					lualine_a = { "mode" },
+					lualine_b = {
+						"branch",
+						"diff",
+						{
+							"diagnostics",
+							sources = { "nvim_diagnostic" },
+							symbols = vim.g.have_nerd_font
+									and { error = " ", warn = " ", info = " ", hint = " " }
+								or { error = "❗", warn = "⚠️", info = "ℹ️", hint = "💡" },
+						},
 					},
+					lualine_c = { "filename" },
+					lualine_x = {
+						"filetype",
+					},
+					lualine_z = { "location" },
 				},
-				lualine_c = { "filename" },
-				lualine_x = {
-					"filetype",
-				},
-				lualine_z = { "location" },
-			},
-		},
+			})
+		end,
 	},
 
 	{
