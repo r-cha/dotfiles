@@ -749,19 +749,10 @@ require("lazy").setup({
 		"nvim-lualine/lualine.nvim",
 		-- See `:help lualine.txt`
 		config = function()
-			-- Function to get appropriate theme
-			local function get_theme()
-				if vim.o.background == "dark" then
-					return require("custom.lualine_theme")
-				else
-					return "auto"
-				end
-			end
-
 			require("lualine").setup({
 				options = {
 					icons_enabled = vim.g.have_nerd_font,
-					theme = get_theme(),
+					theme = "auto",
 					component_separators = "|",
 					section_separators = "",
 				},
