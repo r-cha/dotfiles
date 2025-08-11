@@ -1,9 +1,10 @@
 # Ghostty Config
 
 ## Aesthetics
+
 theme = light:flexoki-light, dark:flexoki-dark
 font-family = Iosevka Term
-font-size = 16
+font-size = 14
 shell-integration-features = no-cursor
 mouse-hide-while-typing = true
 cursor-style = block
@@ -14,8 +15,10 @@ macos-titlebar-proxy-icon = hidden
 macos-icon = custom-style
 
 ## Behavior
+
 window-save-state = always
 quit-after-last-window-closed = true
 
 ## Keybinds
+
 keybind = global:command+`=toggle_quick_terminal
