@@ -69,11 +69,6 @@ export CLICOLOR=1
 # TODO: Transient prompt
 # SHORT_PROMPT='%F{%(?.green.red)}%~ ╶❯%f '
 
-# I hate this, but the init options slightly optimize it (300ms -> ~90ms)
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init - --no-rehash zsh)"
-
 autoload -Uz vcs_info
 precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats '%b '
