@@ -40,7 +40,9 @@ mkcd() {
 }
 
 # Git
-alias b='git switch -C'
+b() {
+  git switch "$1" 2>/dev/null || git switch -c "$1"
+}
 alias s='git status --porcelain'
 gcap() {
   # git commit all push
