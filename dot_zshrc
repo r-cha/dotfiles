@@ -40,13 +40,8 @@ mkcd() {
 }
 
 # Git
-alias b='git switch'
-alias nb='git switch -c'
-alias s='git status'
-alias a='git add'
-alias c='git commit'
-alias gpl='git pull'
-alias gps='git push'
+alias b='git switch -C'
+alias s='git status --porcelain'
 gcap() {
   # git commit all push
   git add --all
@@ -73,5 +68,29 @@ autoload -Uz vcs_info
 precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats '%b '
 setopt PROMPT_SUBST
+
+# Custom path formatting function
+format_path() {
+  local cur=${PWD:t}                               # current folder (blue)
+  local git_root prefix repo rel parent
+
+  if git_root=$(git rev-parse --show-toplevel 2>/dev/null); then
+    prefix=${git_root%/*}/                         # path before repo
+    prefix=${prefix/#$HOME/\~}                     # collapse home to ~
+    repo=${git_root:t}                             # repo name
+    rel=${PWD#$git_root} rel=${rel#/}              # path *inside* repo
+    if [[ -z $rel ]]; then                         # at repo root
+      printf '%%F{8}%s%%f%%F{blue}%s%%f' "$prefix" "$repo"
+    else                                           # somewhere inside repo
+      parent=${rel%/*}; [[ $parent == $rel ]] && parent='' || parent="/$parent"
+      printf '%%F{8}%s%%f%%F{white}%s%s/%%f%%F{blue}%s%%f' "$prefix" "$repo" "$parent" "$cur"
+    fi
+  else                                             # not a git repo
+    local parent_path=${PWD:h}
+    parent_path=${parent_path/#$HOME/\~}           # collapse home to ~
+    printf '%%F{8}%s/%%f%%F{8}%s%%f' "$parent_path" "$cur"
+  fi
+}
+
 NEWLINE=$'\n'
-PROMPT='%F{%(?.green.red)}┌%f%F{blue}%~%f%F{red} ${vcs_info_msg_0_}%f%F{%(?.green.red)}${NEWLINE}└❯%f '
+PROMPT='%F{%(?.green.red)}┌%f$(format_path)%F{red} ${vcs_info_msg_0_}%f%F{%(?.green.red)}${NEWLINE}└❯%f '
