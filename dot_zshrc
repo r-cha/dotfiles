@@ -36,7 +36,7 @@ export CLICOLOR=1
 # Plugins
 eval "$(zoxide init zsh)"
 source <(fzf --zsh)
-export FZF_DEFAULT_OPTS="--style minimal --layout reverse --preview 'fzf-preview.sh {}' --bind 'focus:transform-header:file --brief {}'"
+export FZF_DEFAULT_OPTS="--style minimal --layout reverse"
 
 # Random utils
 alias ll='ls -al'
