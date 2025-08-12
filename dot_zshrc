@@ -31,6 +31,12 @@ bindkey '^[[A' history-search-backward    # Up arrow - search history
 bindkey '^[[B' history-search-forward     # Down arrow - search history
 
 export EDITOR='nvim'
+export CLICOLOR=1
+
+# Plugins
+eval "$(zoxide init zsh)"
+source <(fzf --zsh)
+export FZF_DEFAULT_OPTS="--style minimal --layout reverse --preview 'fzf-preview.sh {}' --bind 'focus:transform-header:file --brief {}'"
 
 # Random utils
 alias ll='ls -al'
@@ -61,17 +67,14 @@ opus() {
   llm -m claude-4-opus "$1"
 }
 
-export CLICOLOR=1
 
-# TODO: Transient prompt
-# SHORT_PROMPT='%F{%(?.green.red)}%~ ╶❯%f '
 
+# Custom prompt
 autoload -Uz vcs_info
 precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats '%b '
 setopt PROMPT_SUBST
 
-# Custom path formatting function
 format_path() {
   local cur=${PWD:t}                               # current folder (blue)
   local git_root prefix repo rel parent
