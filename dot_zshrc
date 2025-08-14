@@ -50,6 +50,7 @@ b() {
   git switch "$1" 2>/dev/null || git switch -c "$1"
 }
 alias s='git status --porcelain'
+alias ss='git status'
 gcap() {
   # git commit all push
   git add --all
