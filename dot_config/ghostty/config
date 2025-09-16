@@ -2,7 +2,7 @@
 
 ## Aesthetics
 
-theme = light:flexoki-light, dark:flexoki-dark
+theme = light:Flexoki Light, dark:Flexoki Dark
 font-family = Iosevka Term
 font-size = 14
 shell-integration-features = no-cursor
