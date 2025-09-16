@@ -554,7 +554,62 @@ require("lazy").setup({
 						analysis = {
 							-- Ignore all files for analysis to exlusively use Ruff for linting
 							ignore = { "*" },
+							autoSearchPaths = true,
+							useLibraryCodeForTypes = true,
+							diagnosticMode = "workspace",
 						},
+						-- Configure python path discovery for uv and monorepo support
+						venvPath = vim.fn.getcwd(),
+						pythonPath = function()
+							local cwd = vim.fn.getcwd()
+							
+							-- Look for .venv in current directory and parent directories
+							local function find_venv_python(start_path)
+								local path = start_path
+								while path ~= "/" do
+									local venv_python = path .. "/.venv/bin/python"
+									if vim.fn.executable(venv_python) == 1 then
+										return venv_python
+									end
+									path = vim.fn.fnamemodify(path, ":h")
+								end
+								return nil
+							end
+							
+							-- Try Poetry first (if pyproject.toml exists with poetry)
+							if vim.fn.filereadable(cwd .. "/pyproject.toml") == 1 then
+								local handle = io.popen("cd " .. cwd .. " && poetry env info --path 2>/dev/null")
+								if handle then
+									local poetry_venv = handle:read("*a"):gsub("%s+", "")
+									handle:close()
+									if poetry_venv ~= "" then
+										local poetry_python = poetry_venv .. "/bin/python"
+										if vim.fn.executable(poetry_python) == 1 then
+											return poetry_python
+										end
+									end
+								end
+							end
+							
+							-- Try uv's python path detection
+							local handle = io.popen("cd " .. cwd .. " && uv run which python 2>/dev/null")
+							if handle then
+								local result = handle:read("*a"):gsub("%s+", "")
+								handle:close()
+								if result ~= "" and vim.fn.executable(result) == 1 then
+									return result
+								end
+							end
+							
+							-- Fallback to searching for .venv
+							local venv_python = find_venv_python(cwd)
+							if venv_python then
+								return venv_python
+							end
+							
+							-- Final fallback to system python
+							return vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
+						end,
 					},
 				},
 			}
