@@ -1,0 +1,87 @@
+{
+    // Appearance & Themes
+    "window.autoDetectColorScheme": true,
+    "workbench.preferredLightColorTheme": "Flexoki Light",  // From One Hunter Theme
+    "workbench.preferredDarkColorTheme": "Flexoki Dark",
+    "workbench.iconTheme": "ayu",
+    "workbench.editor.doubleClickTabToToggleEditorGroupSizes": "maximize",
+
+    // Fonts & Typography
+    "editor.fontSize": 14,
+    "editor.fontFamily": "Iosevka",
+    "editor.fontLigatures": true,
+    "terminal.integrated.fontSize": 14,
+    "terminal.integrated.fontFamily": "Iosevka",
+
+    // Editor Behavior
+    "editor.rulers": [100],
+    "editor.hover.above": false,
+    "editor.stickyScroll.enabled": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.minimap.enabled": false,
+    "editor.accessibilitySupport": "off",
+    "editor.inlineSuggest.enabled": true,
+    "editor.formatOnSave": true,
+    "editor.linkedEditing": true,
+    "editor.renderWhitespace": "all",
+    "editor.guides.bracketPairs": "active",
+    "editor.gotoLocation.multipleDefinitions": "goto",
+    "editor.gotoLocation.multipleTypeDefinitions": "goto",
+
+    // Formatting & Code Actions
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "diffEditor.ignoreTrimWhitespace": false,
+
+    // Git
+    "git.confirmSync": false,
+    "git.ignoreMissingGitWarning": true,
+
+    // File Explorer
+    "explorer.confirmDelete": false,
+
+    // Python
+    "python.languageServer": "None",
+    "python.terminal.activateEnvironment": false,
+    "pythonIndent.trimLinesWithOnlyWhitespace": true,
+
+    // TypeScript/JavaScript
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "javascript.updateImportsOnFileMove.enabled": "always",
+
+    // Notebooks
+    "workbench.editorAssociations": {
+        "*.ipynb": "jupyter-notebook"
+    },
+    "notebook.cellToolbarLocation": {
+        "default": "right",
+        "jupyter-notebook": "left"
+    },
+
+    // Language-specific Settings
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.wordBasedSuggestions": "off",
+        "editor.formatOnType": true,
+        "editor.formatOnSave": true
+    },
+    "[typescriptreact]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.tabSize": 2,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+        "editor.tabSize": 2
+    },
+    "[astro]": {
+        "editor.tabSize": 2
+    },
+    "[yaml]": {
+        "editor.tabSize": 2
+    }
+}
