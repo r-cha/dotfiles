@@ -15,5 +15,11 @@ The following are configured by this repo:
 To fully comply with the configuration, the following are also expected to be available on the system:
 
 - [Iosevka Term](https://typeof.net/Iosevka/)
-- [Nerd Font](https://www.nerdfonts.com/font-downloads)
+
+## Setup
+
+```bash
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply r-cha
+brew install font-iosevka-term
+```
 
