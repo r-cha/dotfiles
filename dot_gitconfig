@@ -21,5 +21,9 @@
 	sort = committerdate
 [merge]
 	conflictstyle = zdiff3
+[rerere]
+	enabled = true
+[pull]
+	rebase = true
 [includeIf "gitdir:~/Elation/"]
 	path = ~/Elation/.gitconfig
