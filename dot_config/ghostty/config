@@ -1,5 +1,8 @@
 # Ghostty Config
 
+auto-update-channel = stable
+auto-update = download
+
 ## Aesthetics
 
 theme = light:Flexoki Light, dark:Flexoki Dark
