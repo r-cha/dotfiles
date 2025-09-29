@@ -45,6 +45,24 @@ mkcd() {
   mkdir -p $1 && cd $1
 }
 
+# Docker Compose shortcuts
+dcu() {
+  docker compose up -d
+}
+dcd() {
+  docker compose down
+}
+dcr() {
+  docker compose restart
+}
+dcl() {
+  if [ $# -eq 0 ]; then
+    docker compose logs -f
+  else
+    docker compose logs "$1" -f
+  fi
+}
+
 # Git
 b() {
   git switch "$1" 2>/dev/null || git switch -c "$1"
