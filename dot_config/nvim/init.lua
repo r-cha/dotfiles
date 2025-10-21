@@ -271,8 +271,10 @@ require("lazy").setup({
 			table.insert(vimgrep_arguments, "--glob")
 			table.insert(vimgrep_arguments, "!**/.git/*")
 
+			local dropdown_theme = require("telescope.themes").get_dropdown()
+
 			require("telescope").setup({
-				defaults = {
+				defaults = vim.tbl_extend("force", dropdown_theme, {
 					mappings = {
 						i = {
 							["<c-enter>"] = "to_fuzzy_refine",
@@ -281,7 +283,7 @@ require("lazy").setup({
 						},
 					},
 					vimgrep_arguments = vimgrep_arguments,
-				},
+				}),
 				pickers = {
 					find_files = {
 						-- `hidden = true` will still show the inside of `.git/` as it's not `.gitignore`d.
