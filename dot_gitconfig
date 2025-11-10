@@ -25,5 +25,5 @@
 	enabled = true
 [pull]
 	rebase = true
-[includeIf "gitdir:~/Elation/"]
-	path = ~/Elation/.gitconfig
+[includeIf "gitdir:~/Iambic/"]
+	path = ~/Iambic/.gitconfig
