@@ -25,5 +25,5 @@
 	enabled = true
 [pull]
 	rebase = true
-[includeIf "gitdir:~/Iambic/"]
-	path = ~/Iambic/.gitconfig
+[includeIf "gitdir:~/gh/EntosAI/"]
+	path = ~/gh/EntosAI/.gitconfig
