@@ -6,6 +6,8 @@ auto-update = download
 ## Aesthetics
 
 theme = light:Flexoki Light, dark:Flexoki Dark
+split-divider-color = #878580
+
 font-family = Iosevka Term
 font-size = 14
 shell-integration-features = no-cursor
