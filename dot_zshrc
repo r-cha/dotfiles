@@ -1,12 +1,7 @@
-export ZSH_DISABLE_COMPFIX="true"
-
-export ZSH="~/.zsh"
-
 # History
 HISTSIZE=50000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
-HISTDUP=erase
 setopt appendhistory        # Immediately append to history file.
 setopt sharehistory         # Share history between all sessions
 setopt hist_ignore_space    # Dont record an entry starting with a space.
@@ -33,6 +28,18 @@ bindkey '^[[B' history-search-forward     # Down arrow - search history
 export EDITOR='nvim'
 export CLICOLOR=1
 
+# PATH — must be set BEFORE conda init so conda activation stays at the front.
+# (Otherwise these prepends shadow an activated env's bin: prompt shows the env
+#  as active but `python`/tools resolve to base until you re-activate.)
+typeset -U path PATH
+typeset -a user_bins
+for candidate in "$HOME/.local/bin" "$HOME/.pixi/bin" "$HOME/miniconda3/bin"; do
+  [[ -d "$candidate" ]] && user_bins+=("$candidate")
+done
+path=($user_bins $path)
+unset user_bins candidate
+export PATH
+
 # Plugins
 eval "$(zoxide init zsh)"
 source <(fzf --zsh)
@@ -40,9 +47,16 @@ export FZF_DEFAULT_OPTS="--style minimal --layout reverse"
 
 # Random utils
 alias ll='ls -al'
-alias line='printf '─%.s' {1..$(tput cols)}'
+line() {
+  local width=${COLUMNS:-80}
+  print -r -- "${(pl:$width::─:)}"
+}
 mkcd() {
-  mkdir -p $1 && cd $1
+  (( $# == 1 )) || {
+    print -u2 -- "usage: mkcd <directory>"
+    return 2
+  }
+  mkdir -p -- "$1" && cd -- "$1"
 }
 
 # Docker Compose shortcuts
@@ -56,41 +70,172 @@ dcr() {
   docker compose restart
 }
 dcl() {
-  if [ $# -eq 0 ]; then
-    docker compose logs -f
-  else
-    docker compose logs "$1" -f
-  fi
+  docker compose logs -f "$@"
 }
 
 # Git
 b() {
-  git switch "$1" 2>/dev/null || git switch -c "$1"
+  local branch="$1"
+  [[ -n "$branch" ]] || {
+    print -u2 -- "usage: b <branch>"
+    return 2
+  }
+
+  if git show-ref --verify --quiet "refs/heads/$branch"; then
+    git switch "$branch"
+  elif git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+    git switch --track "origin/$branch"
+  else
+    git switch -c "$branch"
+  fi
 }
 alias s='git status --porcelain'
 alias ss='git status'
+alias gd='git diff'
+alias gds='git diff --staged'
+gca() {
+  # git commit all
+  (( $# )) || {
+    print -u2 -- "usage: gca <commit message>"
+    return 2
+  }
+  git add --all && git commit -m "$*"
+}
 gcap() {
   # git commit all push
-  git add --all
-  git commit -m "$1"
-  git push
+  gca "$@" && git push
 }
-alias cdr='cd $(git rev-parse --show-toplevel)' # cd to git Root
+cdr() {
+  local root
+  root=$(git rev-parse --show-toplevel 2>/dev/null) || {
+    print -u2 -- "not inside a Git repository"
+    return 1
+  }
+  cd -- "$root"
+}
 alias cdcode='cd ~/code' # cd to project library
 
-# LLM shortcuts
-sonnet() {
-  llm -m claude-4-sonnet "$1"
-}
-opus() {
-  llm -m claude-4-opus "$1"
+remoteworktree() {
+  local branch="$1"
+  local base="worktrees"
+  local target
+
+  [[ -n "$branch" ]] || {
+    print -u2 -- "usage: remoteworktree <branch>"
+    return 2
+  }
+  git check-ref-format --branch "$branch" >/dev/null || return
+  git fetch origin || return
+
+  target="$base/$branch"
+  if ! git show-ref --verify --quiet "refs/heads/$branch" &&
+     ! git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+    print -u2 -- "branch not found on origin: $branch"
+    return 1
+  fi
+
+  mkdir -p -- "${target:h}" || return
+  if git show-ref --verify --quiet "refs/heads/$branch"; then
+    git worktree add "$target" "$branch"
+  else
+    git worktree add --track -b "$branch" "$target" "origin/$branch"
+  fi
 }
 
+
+
+# ─────────────────────────────
+# Conda / Mamba setup + helpers
+# ─────────────────────────────
+export CONDA_CHANGEPS1=false
+export CONDA_AUTO_ACTIVATE_BASE=false
+
+# Initialize conda if available
+if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+  . "$HOME/miniconda3/etc/profile.d/conda.sh"
+elif command -v conda >/dev/null 2>&1; then
+  eval "$(conda shell.zsh hook)"
+fi
+
+# Prompt segment: show active env (dim for base, yellow for others)
+conda_prompt() {
+  local env="${CONDA_DEFAULT_ENV:-${MAMBA_DEFAULT_ENV:-}}"
+  [[ -z "$env" ]] && return 0
+  if [[ "$env" = "base" ]]; then
+    printf ' %%F{8}(base)%%f '
+  else
+    printf ' %%F{yellow}(%s)%%f ' "$env"
+  fi
+}
+
+# Detect an env tied to the repo by walking up the directory tree
+_conda_env_in_repo() {
+  local dir="$PWD" target f
+  while [[ "$dir" != "/" ]]; do
+    if [[ -f "$dir/.conda-env" ]]; then
+      IFS= read -r target < "$dir/.conda-env"
+      print -r -- "${target//[[:space:]]/}"
+      return
+    fi
+    for f in environment-dev.yml environment-dev.yaml environment.yml environment.yaml; do
+      if [[ -f "$dir/$f" ]]; then
+        awk '/^[[:space:]]*name:[[:space:]]*/{print $2; exit}' "$dir/$f"
+        return
+      fi
+    done
+    dir="${dir:h}"
+  done
+}
+
+# Auto-activate/deactivate on cd
+typeset -g __AUTO_CONDA=""
+_auto_activate_conda() {
+  local target="$(_conda_env_in_repo 2>/dev/null)"
+  local current="${CONDA_DEFAULT_ENV:-${MAMBA_DEFAULT_ENV:-}}"
+
+  if [[ -n "$target" ]]; then
+    if [[ "$current" != "$target" ]]; then
+      if conda activate "$target" 2>/dev/null; then
+        __AUTO_CONDA="$target"
+      else
+        print -u2 -- "conda: unable to auto-activate '$target'"
+        return 1
+      fi
+    else
+      __AUTO_CONDA="$target"
+    fi
+  else
+    if [[ -n "$__AUTO_CONDA" ]]; then
+      if [[ "$current" == "$__AUTO_CONDA" ]]; then
+        conda deactivate 2>/dev/null || return
+      fi
+      __AUTO_CONDA=""
+    fi
+  fi
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook chpwd _auto_activate_conda
+_auto_activate_conda  # run once at shell start
+
+# Quick conda helpers
+ca()      { conda activate "$@"; }
+cdv()     { conda deactivate; }
+cnew()    { local n="$1" py="${2:-}"; [[ -z "$n" ]] && { echo "usage: cnew <name> [python_version]"; return 1; }
+            local args=(-n "$n"); [[ -n "$py" ]] && args+=(python="$py")
+            conda create -y "${args[@]}" && conda activate "$n"; }
+crem()    { local n="${1:-$CONDA_DEFAULT_ENV}"; [[ -z "$n" ]] && { echo "no env"; return 1; }
+            conda deactivate 2>/dev/null; conda env remove -n "$n"; }
+cexport() { local n="${1:-$CONDA_DEFAULT_ENV}"; [[ -z "$n" ]] && { echo "no env"; return 1; }
+            conda env export -n "$n" | sed '/^prefix:/d' > environment.yml && echo "wrote environment.yml"; }
+cenv()    { local picked; picked=$(conda env list 2>/dev/null |
+              awk 'NR>2 && $1!=""{print $1}' |
+              fzf --prompt="conda env> ") || return
+            [[ -n "$picked" ]] && conda activate "$picked"; }
 
 
 # Custom prompt
 autoload -Uz vcs_info
-precmd() { vcs_info }
+add-zsh-hook precmd vcs_info
 zstyle ':vcs_info:git:*' formats '%b '
 setopt PROMPT_SUBST
 
@@ -116,5 +261,14 @@ format_path() {
   fi
 }
 
+typeset -g PROMPT_PATH=""
+typeset -g _PROMPT_PATH_PWD=""
+_update_prompt_path() {
+  [[ "$PWD" == "$_PROMPT_PATH_PWD" ]] && return
+  PROMPT_PATH="$(format_path)"
+  _PROMPT_PATH_PWD="$PWD"
+}
+add-zsh-hook precmd _update_prompt_path
+
 NEWLINE=$'\n'
-PROMPT='%F{%(?.green.red)}┌%f$(format_path)%F{red} ${vcs_info_msg_0_}%f%F{%(?.green.red)}${NEWLINE}└❯%f '
+PROMPT='%F{%(?.green.red)}┌%f$(conda_prompt)${PROMPT_PATH}%F{red} ${vcs_info_msg_0_}%f%F{%(?.green.red)}${NEWLINE}└❯%f '
