@@ -1,3 +1,9 @@
+.claude
+.worktrees
 **/pyrightconfig.json
 **/.DS_Store
 *.local.*
+.envrc
+.conda-env
+.plans
+.zed
