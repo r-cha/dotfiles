@@ -115,31 +115,79 @@ cdr() {
 }
 alias cdcode='cd ~/code' # cd to project library
 
-remoteworktree() {
+wthi() {
   local branch="$1"
-  local base="worktrees"
-  local target
+  local common_dir clone existing target
 
   [[ -n "$branch" ]] || {
-    print -u2 -- "usage: remoteworktree <branch>"
+    print -u2 -- "usage: wthi <branch>"
     return 2
   }
   git check-ref-format --branch "$branch" >/dev/null || return
-  git fetch origin || return
 
-  target="$base/$branch"
-  if ! git show-ref --verify --quiet "refs/heads/$branch" &&
-     ! git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
-    print -u2 -- "branch not found on origin: $branch"
+  [[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" == true ]] || {
+    print -u2 -- "wthi: not inside a Git worktree"
+    return 1
+  }
+
+  common_dir=$(git rev-parse --path-format=absolute --git-common-dir) || return
+  clone="${common_dir:h}"
+
+  # Reuse the checkout if this branch is already active anywhere.
+  existing=$(git -C "$clone" worktree list --porcelain |
+    awk -v ref="refs/heads/$branch" '
+      /^worktree / { path = substr($0, 10) }
+      $1 == "branch" && $2 == ref { print path; exit }
+    ') || return
+  [[ -n "$existing" ]] && {
+    cd -- "$existing"
+    return
+  }
+
+  target="$clone/.worktrees/${branch//\//-}"
+  if [[ -e "$target" ]]; then
+    cd -- "$target"
+    return
+  fi
+
+  git -C "$clone" fetch origin "$branch" || return
+  mkdir -p -- "${target:h}" || return
+
+  if git -C "$clone" show-ref --verify --quiet "refs/heads/$branch"; then
+    git -C "$clone" worktree add "$target" "$branch" || return
+  else
+    git -C "$clone" worktree add --track -b "$branch" \
+      "$target" "origin/$branch" || return
+  fi
+
+  cd -- "$target"
+}
+
+wtbye() {
+  local worktree git_dir common_dir main
+
+  [[ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" == true ]] || {
+    print -u2 -- "wtbye: not inside a Git worktree"
+    return 1
+  }
+
+  worktree=$(git rev-parse --show-toplevel) || return
+  git_dir=$(git rev-parse --path-format=absolute --git-dir) || return
+  common_dir=$(git rev-parse --path-format=absolute --git-common-dir) || return
+
+  if [[ "$git_dir" == "$common_dir" ]]; then
+    print -u2 -- "wtbye: refusing to remove the main checkout"
     return 1
   fi
 
-  mkdir -p -- "${target:h}" || return
-  if git show-ref --verify --quiet "refs/heads/$branch"; then
-    git worktree add "$target" "$branch"
-  else
-    git worktree add --track -b "$branch" "$target" "origin/$branch"
+  main="${common_dir:h}"
+  builtin cd -- "$main" || return
+  if ! git -C "$main" worktree remove "$worktree"; then
+    builtin cd -- "$worktree" 2>/dev/null
+    return 1
   fi
+
+  exit 0
 }
 
 
