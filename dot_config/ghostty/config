@@ -38,3 +38,5 @@ split-inherit-working-directory = true
 ## Keybinds
 
 keybind = global:command+`=toggle_quick_terminal
+keybind = command+e=new_split:left
+keybind = shift+command+e=new_split:up
