@@ -6,6 +6,8 @@ auto-update = download
 ## Aesthetics
 
 theme = light:Flexoki Light Dim, dark:Flexoki Dark Dim
+background-opacity = 0.84
+background-blur = 40
 split-divider-color = #878580
 
 font-family = Iosevka Term Slab
