@@ -2,10 +2,6 @@
 
 I use [chezmoi](https://www.chezmoi.io/) to manage my dotfiles across machines.
 
-# Requirements
-
-Chezmoi doesn't handle system state, only config files.
-
 A number of tools are configured by this repo, but only the following are actively maintained:
 
 - zsh
@@ -17,8 +13,12 @@ A number of tools are configured by this repo, but only the following are active
 
 ```bash
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply r-cha
-brew install --cask ghostty
-brew install neovim
-brew install font-iosevka-term
 ```
 
+On macOS, `init --apply` installs Homebrew if it's missing and then runs `brew bundle` against [`Brewfile`](Brewfile). The script runs again whenever `Brewfile` changes.
+
+To update `Brewfile` after installing something new:
+
+```bash
+brew bundle dump --file="$(chezmoi source-path)/Brewfile" --force --no-vscode
+```
