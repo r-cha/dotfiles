@@ -93,6 +93,7 @@ alias s='git status --porcelain'
 alias ss='git status'
 alias gd='git diff'
 alias gds='git diff --staged'
+alias gpr='git pull --rebase'
 gca() {
   # git commit all
   (( $# )) || {
