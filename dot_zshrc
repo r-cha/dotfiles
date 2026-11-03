@@ -321,3 +321,6 @@ add-zsh-hook precmd _update_prompt_path
 
 NEWLINE=$'\n'
 PROMPT='%F{%(?.green.red)}┌%f$(conda_prompt)${PROMPT_PATH}%F{red} ${vcs_info_msg_0_}%f%F{%(?.green.red)}${NEWLINE}└❯%f '
+
+# Machine-local overrides and secrets — not tracked by chezmoi (see .chezmoiignore).
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
